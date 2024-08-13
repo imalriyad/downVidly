@@ -66,10 +66,10 @@ const Hero = () => {
          }
        }, 2000); // 2000 milliseconds = 2 seconds
      } else {
-       console.error("Download link not found in response.");
+        alert("Sorry for Intruped, Try Again");
      }
    } catch (error) {
-     console.error("Error fetching download link:", error);
+    alert("Sorry for Intruped, Try Again")
    }
  };
   console.log(downloadLink);

@@ -1,6 +1,17 @@
 "use client";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 const Navbar = () => {
+
+
+const router = useRouter();
+
+const goHome = () => {
+  router.push("/");
+};
+
+
+
   const [isOpen, setOpen] = useState(false);
   return (
     <div className="flex justify-between py-4 lg:px-0 px-4 items-center">
@@ -11,7 +22,10 @@ const Navbar = () => {
       {/* Mobile side menu */}
       <div className={isOpen ? "block" : "hidden"}>
         <ul className="list-none p-10 absolute  right-4 h-[80vh] top-16 z-10 lg:hidden gap-6 font-medium flex flex-col bg-primary-color ">
-          <li className="hover:text-primary-black hover:underline cursor-pointer ">
+          <li
+            onClick={goHome}
+            className="hover:text-primary-black hover:underline cursor-pointer "
+          >
             Youtube Downloader
           </li>
           <li className="hover:text-primary-black hover:underline cursor-pointer ">
