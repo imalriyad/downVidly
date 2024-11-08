@@ -14,65 +14,59 @@ const Hero = () => {
   const [videoInfo, setVideoInfo] = useState("");
   const [videoId, setVideoId] = useState("");
 
-  const handleVideoInfo = async () => {
-    if (!url) {
-      return;
-    }
+const handleVideoInfo = async () => {
+    if (!url) return;
 
     try {
       const res = await axios.get(
         `${incodedUri}copyright=0&format=720&url=${url}&api=${incodedKey}`
       );
 
-      console.log("Response data:", res.data); // Debugging line
-
       if (!res.data || !res.data.id) {
         console.error("ID not found in response data");
         return;
       }
-      console.log("API response data:", res.data);
-      setVideoInfo(res?.data);
-      setVideoId(res?.data?.id);
+      
+      setVideoInfo(res.data);
+      setVideoId(res.data.id);
     } catch (error) {
       console.error("Error fetching video info:", error);
     }
   };
 
- const handleDownload = async (id) => {
-   if (!id || downloadLink) {
-     // Prevent download if there's no video ID or if the download link is already set
-     console.log("Download already triggered or no video ID available.");
-     return;
-   }
+  const handleDownload = async (id) => {
+    if (!id || downloadLink || loading) {
+      console.log("Download already triggered or no video ID available.");
+      return;
+    }
 
-   console.log("Video ID before download:", id);
+    setLoading(true); // Start loading state
+    try {
+      const link = `${getDownloadLinkApi}${id}`;
+      const download = await axios.get(link);
 
-   try {
-     const link = `${getDownloadLinkApi}${id}`;
-     console.log("API call:", link);
+      if (download.data && download.data.download_url) {
+        setDownloadLink(download.data.download_url);
 
-     const download = await axios.get(link);
-
-     if (download.data && download.data.download_url) {
-       setDownloadLink(download.data.download_url);
-       console.log("Download Link:", download.data.download_url);
-
-       // Delay the triggering of the download by 2 seconds
-       setTimeout(() => {
-         const downloadAnchor = document.getElementById("download-link");
-         if (downloadAnchor) {
-           downloadAnchor.href = download.data.download_url;
-           downloadAnchor.click();
-         }
-       }, 2000); // 2000 milliseconds = 2 seconds
-     } else {
-        alert("Sorry for Intruped, Try Again");
-     }
-   } catch (error) {
-    alert("Sorry for Intruped, Try Again")
-   }
- };
-  console.log(downloadLink);
+        // Delay the triggering of the download by 2 seconds
+        setTimeout(() => {
+          const downloadAnchor = document.getElementById("download-link");
+          if (downloadAnchor) {
+            downloadAnchor.href = download.data.download_url;
+            downloadAnchor.click();
+          }
+        }, 2000);
+      } else {
+        alert("Sorry for Interruption, Try Again");
+      }
+    } catch (error) {
+      console.error("Download error:", error);
+      alert("Sorry for Interruption, Try Again");
+    } finally {
+      setLoading(false); // End loading state
+    }
+  };
+  
   return (
     <div className="bg-gradient-to-r from-[#121111] md:p-8 p-1 to-[#5b5a5a] rounded-sm h-auto w-full ">
       <HeroText></HeroText>
