@@ -13,7 +13,8 @@ const Hero = () => {
   const [downloadLink, setDownloadLink] = useState("");
   const [videoInfo, setVideoInfo] = useState("");
   const [videoId, setVideoId] = useState("");
-
+  const [loading, setLoading] = useState(false);
+  
 const handleVideoInfo = async () => {
     if (!url) return;
 
