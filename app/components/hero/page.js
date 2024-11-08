@@ -36,37 +36,36 @@ const handleVideoInfo = async () => {
   };
 
   const handleDownload = async (id) => {
-    if (!id || downloadLink || loading) {
-      console.log("Download already triggered or no video ID available.");
-      return;
-    }
+    if (!id || loading) return; // Prevent duplicate requests if already loading
+    setLoading(true); // Start loading state to show "Downloading..." and loader
 
-    setLoading(true); // Start loading state
     try {
-      const link = `${getDownloadLinkApi}${id}`;
+      const link = `${process.env.NEXT_PUBLIC_GET_DOWNLOAD_URL}${id}`;
       const download = await axios.get(link);
 
       if (download.data && download.data.download_url) {
         setDownloadLink(download.data.download_url);
 
-        // Delay the triggering of the download by 2 seconds
+        // Trigger download after 2 seconds
         setTimeout(() => {
           const downloadAnchor = document.getElementById("download-link");
           if (downloadAnchor) {
             downloadAnchor.href = download.data.download_url;
             downloadAnchor.click();
           }
+          setLoading(false); // Stop loading state after initiating download
         }, 2000);
       } else {
         alert("Sorry for Interruption, Try Again");
+        setLoading(false); // Stop loading state if download fails
       }
     } catch (error) {
       console.error("Download error:", error);
       alert("Sorry for Interruption, Try Again");
-    } finally {
-      setLoading(false); // End loading state
+      setLoading(false); // Stop loading state on error
     }
   };
+
   
   return (
     <div className="bg-gradient-to-r from-[#121111] md:p-8 p-1 to-[#5b5a5a] rounded-sm h-auto w-full ">
@@ -95,13 +94,26 @@ const handleVideoInfo = async () => {
       Download Link
     </a>
 
-    <button
-      onClick={() => handleDownload(videoId)}
-      className="px-6 py-3 bg-primary-color lg:w-auto lg:mt-[0px] mt-[10px] text-black rounded-lg font-medium"
-      disabled={!videoId}
-    >
-      Download
-    </button>
+   <button
+        onClick={() => handleDownload(videoId)}
+        className={`px-6 py-3 bg-primary-color lg:w-auto lg:mt-[0px] mt-[10px] text-black rounded-lg font-medium`}
+        disabled={!videoId || loading}
+      >
+        {loading ? (
+          <div className="flex items-center">
+            <span className="loader mr-2"></span> {/* Loader animation */}
+            Downloading...
+          </div>
+        ) : (
+          "Download"
+        )}
+      </button>
+
+      {downloadLink && (
+        <a id="download-link" style={{ display: "none" }} download>
+          Download
+        </a>
+      )}
             </div>
           </div>
         ) : (
