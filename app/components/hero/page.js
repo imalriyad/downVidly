@@ -20,7 +20,7 @@ const handleVideoInfo = async () => {
 
     try {
       const res = await axios.get(
-        `${incodedUri}copyright=0&format=720&url=${url}&api=${incodedKey}`
+        `${incodedUri}copyright=1&format=720&url=${url}&api=${incodedKey}`
       );
 
       if (!res.data || !res.data.id) {
