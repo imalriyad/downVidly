@@ -102,7 +102,7 @@ const handleVideoInfo = async () => {
         {loading ? (
           <div className="flex items-center">
             <span className="loader mr-2"></span> {/* Loader animation */}
-            Downloading...
+            Download starting...
           </div>
         ) : (
           "Download"
@@ -129,7 +129,7 @@ const handleVideoInfo = async () => {
               onClick={handleVideoInfo}
               className="px-6 py-3 bg-primary-color lg:w-auto w-full text-black lg:rounded-r-lg lg:rounded-l-none lg:mt-0 md:mt-4 mt-3 rounded-lg font-medium lg:absolute right-0"
             >
-              Download
+              Get Download Link
             </button>
           </div>
         )}
